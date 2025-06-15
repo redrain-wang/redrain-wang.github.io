@@ -4,13 +4,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>手写体文字图片生成器-home page</title>
+    <title>手写体文字图片生成器</title>
     <!-- 引入 Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Smiley+Sans&family=LXGW+WenKai+Lite&display=swap');
+        /* Google Fonts Import for UI and Handwriting Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Smiley+Sans&family=LXGW+WenKai+Lite&family=Ma+Shan+Zheng&family=Liu+Jian+Mao+Cao&family=Inter:wght@300;400;500;600;700&display=swap');
 
-        /* 自定义字体样式 */
+        body {
+            font-family: 'Inter', sans-serif;
+            /* 使用Inter作为UI界面的默认字体 */
+        }
+
+        /* Custom Handwriting Font Styles */
         .font-zcool-kuaile {
             font-family: 'ZCOOL KuaiLe', cursive;
         }
@@ -21,57 +27,122 @@
 
         .font-lxgw-wenkai {
             font-family: 'LXGW WenKai Lite', cursive;
-            /* 使用 Lite 版本以确保兼容性 */
+            /* Using Lite version for broader compatibility */
         }
 
-        /* 隐藏Canvas，只显示图片 */
+        .font-ma-shan-zheng {
+            font-family: 'Ma Shan Zheng', cursive;
+        }
+
+        .font-liu-jian-mao-cao {
+            font-family: 'Liu Jian Mao Cao', cursive;
+        }
+
+        /* Hide Canvas, only show Image */
         #outputCanvas {
             display: none;
+        }
+
+        /* Custom Slider Styles */
+        input[type='range']::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #8b5cf6;
+            /* purple-500 */
+            cursor: pointer;
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.3);
+            /* purple-500 with opacity */
+            transition: background .15s ease-in-out, box-shadow .15s ease-in-out;
+        }
+
+        input[type='range']::-webkit-slider-thumb:hover {
+            background: #7c3aed;
+            /* purple-600 */
+        }
+
+        input[type='range']::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #8b5cf6;
+            cursor: pointer;
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.3);
+            transition: background .15s ease-in-out, box-shadow .15s ease-in-out;
+        }
+
+        input[type='range']::-moz-range-thumb:hover {
+            background: #7c3aed;
         }
     </style>
 </head>
 
 <body
-    class="bg-gradient-to-r from-blue-100 via-purple-100 to-pink-100 min-h-screen flex items-center justify-center p-4 font-sans text-gray-800">
+    class="bg-gradient-to-br from-purple-100 via-pink-100 to-blue-200 min-h-screen flex items-center justify-center p-6 text-gray-800">
 
-    <div class="bg-white p-8 rounded-2xl shadow-xl max-w-4xl w-full">
-        <h1 class="text-4xl font-extrabold text-center text-purple-700 mb-8 tracking-tight">手写体文字图片生成器</h1>
+    <div
+        class="bg-white p-10 rounded-3xl shadow-2xl max-w-5xl w-full border border-gray-100 transform transition-all duration-300 hover:scale-[1.005]">
+        <h1
+            class="text-5xl font-extrabold text-center text-purple-700 mb-10 tracking-tight flex items-center justify-center space-x-3">
+            <svg class="w-10 h-10 text-pink-500" fill="currentColor" viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd"
+                    d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828zM4 12a2 2 0 012-2h.01a.75.75 0 100-1.5H6a3.5 3.5 0 00-3.5 3.5v1.5a.75.75 0 001.5 0V12zM15 15a.75.75 0 00-.75.75v1.5a.75.75 0 01-.75.75H4a2 2 0 01-2-2v-1.5a.75.75 0 00-1.5 0v1.5a3.5 3.5 0 003.5 3.5h9.5a3.5 3.5 0 003.5-3.5v-1.5a.75.75 0 00-1.5 0V15z"
+                    clip-rule="evenodd"></path>
+            </svg>
+            <span>手写体文字图片生成器</span>
+        </h1>
 
-        <div class="grid md:grid-cols-2 gap-8">
+        <div class="grid md:grid-cols-2 gap-10">
             <!-- 设置表单 -->
-            <div class="space-y-6">
+            <div class="space-y-7">
                 <div>
                     <label for="inputText" class="block text-lg font-semibold text-gray-700 mb-2">输入文字:</label>
                     <textarea id="inputText"
-                        class="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-transparent transition duration-300 ease-in-out text-base h-40 resize-y"
+                        class="w-full p-4 border border-gray-300 rounded-xl focus:ring-4 focus:ring-purple-300 focus:border-transparent transition duration-300 ease-in-out text-base h-40 resize-y shadow-sm hover:shadow-md"
                         placeholder="在这里输入你想要生成手写体的文字...（回车和空格会被保留）"></textarea>
                 </div>
 
                 <div>
                     <label for="fontSelect" class="block text-lg font-semibold text-gray-700 mb-2">选择字体:</label>
                     <select id="fontSelect"
-                        class="w-full p-3 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-purple-400 focus:border-transparent transition duration-300 ease-in-out text-base">
+                        class="w-full p-3 border border-gray-300 rounded-xl bg-white focus:ring-4 focus:ring-purple-300 focus:border-transparent transition duration-300 ease-in-out text-base shadow-sm hover:shadow-md">
                         <option value="LXGW WenKai Lite">霞鹜文楷 (LXGW WenKai Lite)</option>
                         <option value="ZCOOL KuaiLe">站酷快乐体 (ZCOOL KuaiLe)</option>
                         <option value="Smiley Sans">得意黑 (Smiley Sans)</option>
+                        <option value="Ma Shan Zheng">马善政 (Ma Shan Zheng)</option>
+                        <option value="Liu Jian Mao Cao">刘江毛草 (Liu Jian Mao Cao)</option>
                     </select>
                 </div>
 
                 <div>
                     <label for="backgroundSelect" class="block text-lg font-semibold text-gray-700 mb-2">选择背景:</label>
                     <select id="backgroundSelect"
-                        class="w-full p-3 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-purple-400 focus:border-transparent transition duration-300 ease-in-out text-base">
+                        class="w-full p-3 border border-gray-300 rounded-xl bg-white focus:ring-4 focus:ring-purple-300 focus:border-transparent transition duration-300 ease-in-out text-base shadow-sm hover:shadow-md">
                         <option value="notebook">笔记本</option>
                         <option value="parchment-texture">羊皮纸纹理</option>
                         <option value="vintage-paper">复古纸张</option>
                         <option value="white">纯白</option>
+                        <option value="custom">自定义图片</option>
                     </select>
                 </div>
+
+                <!-- 自定义背景上传 -->
+                <div id="customBgUploadContainer" class="hidden">
+                    <label for="customBgUpload"
+                        class="block text-lg font-semibold text-gray-700 mb-2">上传自定义背景图片:</label>
+                    <input type="file" id="customBgUpload" accept="image/*"
+                        class="w-full p-3 border border-gray-300 rounded-xl bg-white focus:ring-4 focus:ring-purple-300 focus:border-transparent transition duration-300 ease-in-out text-base shadow-sm hover:shadow-md cursor-pointer">
+                    <span class="block text-sm text-gray-600 mt-1">支持 JPG, PNG 等格式。图片将自动缩放以覆盖整个背景。</span>
+                </div>
+
 
                 <div>
                     <label for="textColor" class="block text-lg font-semibold text-gray-700 mb-2">文字颜色:</label>
                     <input type="color" id="textColor" value="#333333"
-                        class="w-full h-10 border border-gray-300 rounded-lg cursor-pointer focus:ring-2 focus:ring-purple-400 focus:border-transparent transition duration-300 ease-in-out">
+                        class="w-full h-12 border border-gray-300 rounded-xl cursor-pointer focus:ring-4 focus:ring-purple-300 focus:border-transparent transition duration-300 ease-in-out shadow-sm hover:shadow-md">
                 </div>
 
                 <div>
@@ -81,11 +152,29 @@
                     <span id="fontSizeValue" class="block text-sm text-gray-600 mt-2 text-right">40px</span>
                 </div>
 
-                <!-- 新增文字位置设置 -->
+                <!-- 新增字间距和行间距 -->
+                <div>
+                    <label for="charSpacing" class="block text-lg font-semibold text-gray-700 mb-2">字间距:</label>
+                    <input type="range" id="charSpacing" min="-10" max="20" value="0"
+                        class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer range-lg">
+                    <span id="charSpacingValue" class="block text-sm text-gray-600 mt-2 text-right">0px</span>
+                    <span class="block text-sm text-gray-600 mt-1">调整字符之间的额外空间。</span>
+                </div>
+
+                <div>
+                    <label for="lineSpacingFactor" class="block text-lg font-semibold text-gray-700 mb-2">行间距:</label>
+                    <input type="range" id="lineSpacingFactor" min="80" max="200" value="100"
+                        class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer range-lg">
+                    <span id="lineSpacingFactorValue" class="block text-sm text-gray-600 mt-2 text-right">100%</span>
+                    <span class="block text-sm text-gray-600 mt-1">调整行与行之间的额外空间 (100% 为默认)。</span>
+                </div>
+
+
+                <!-- 文字位置设置 -->
                 <div>
                     <label for="textAlignment" class="block text-lg font-semibold text-gray-700 mb-2">文字位置 (水平):</label>
                     <select id="textAlignment"
-                        class="w-full p-3 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-purple-400 focus:border-transparent transition duration-300 ease-in-out text-base">
+                        class="w-full p-3 border border-gray-300 rounded-xl bg-white focus:ring-4 focus:ring-purple-300 focus:border-transparent transition duration-300 ease-in-out text-base shadow-sm hover:shadow-md">
                         <option value="left">居左</option>
                         <option value="center">居中</option>
                         <option value="right">居右</option>
@@ -94,78 +183,82 @@
 
                 <div>
                     <label for="topOffset" class="block text-lg font-semibold text-gray-700 mb-2">距离顶部 (%):</label>
-                    <input type="range" id="topOffset" min="0" max="100" value="5"
+                    <input type="range" id="topOffset" min="0" max="20" value="5"
                         class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer range-lg">
+                    <!-- Max changed from 100 to 20 for typical usage -->
                     <span id="topOffsetValue" class="block text-sm text-gray-600 mt-2 text-right">5%</span>
                     <span class="block text-sm text-gray-600 mt-1">设置文字内容块距离图片顶部的百分比。</span>
                 </div>
 
-                <!-- 新增随机抖动强度 -->
+                <!-- 随机抖动强度 -->
                 <div>
                     <label for="randomnessIntensity"
                         class="block text-lg font-semibold text-gray-700 mb-2">随机抖动强度:</label>
-                    <input type="range" id="randomnessIntensity" min="0" max="15" value="5"
+                    <input type="range" id="randomnessIntensity" min="0" max="25" value="5"
                         class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer range-lg">
+                    <!-- Max increased to 25 -->
                     <span id="randomnessIntensityValue" class="block text-sm text-gray-600 mt-2 text-right">5</span>
                     <span class="block text-sm text-gray-600 mt-1">增加文字的随机偏移，模拟手写不规则感（0为无抖动）。</span>
                 </div>
 
-                <!-- 新增随机倾斜角度 -->
+                <!-- 随机倾斜角度 -->
                 <div>
                     <label for="lineSkewAngle" class="block text-lg font-semibold text-gray-700 mb-2">随机倾斜角度
                         (度):</label>
-                    <input type="range" id="lineSkewAngle" min="0" max="5" value="0"
+                    <input type="range" id="lineSkewAngle" min="0" max="10" value="0"
                         class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer range-lg">
+                    <!-- Max increased to 10 -->
                     <span id="lineSkewAngleValue" class="block text-sm text-gray-600 mt-2 text-right">0°</span>
                     <span class="block text-sm text-gray-600 mt-1">设置每行/字符的随机倾斜范围（0为无倾斜）。</span>
                 </div>
 
-                <!-- 新增垂直书写模式 -->
+                <!-- 垂直书写模式 -->
                 <div class="flex items-center space-x-2">
                     <input type="checkbox" id="verticalWriting"
-                        class="h-5 w-5 text-purple-600 rounded focus:ring-purple-500">
+                        class="h-5 w-5 text-purple-600 rounded focus:ring-purple-500 cursor-pointer">
                     <label for="verticalWriting" class="text-lg font-semibold text-gray-700">垂直书写模式</label>
                 </div>
 
-                <!-- 新增垂直书写方向选项 -->
-                <div class="space-y-2" id="verticalDirectionOptions" style="display: none;"> <!-- 初始隐藏 -->
+                <!-- 垂直书写方向选项 -->
+                <div class="space-y-3" id="verticalDirectionOptions" style="display: none;"> <!-- 初始隐藏 -->
                     <label for="verticalDirection"
                         class="block text-lg font-semibold text-gray-700 mb-2">垂直书写方向:</label>
                     <select id="verticalDirection"
-                        class="w-full p-3 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-purple-400 focus:border-transparent transition duration-300 ease-in-out text-base">
+                        class="w-full p-3 border border-gray-300 rounded-xl bg-white focus:ring-4 focus:ring-purple-300 focus:border-transparent transition duration-300 ease-in-out text-base shadow-sm hover:shadow-md">
                         <option value="ltr">从左到右</option>
                         <option value="rtl">从右到左</option>
                     </select>
                 </div>
 
-
+                <!-- 生成按钮 - 字体加载后启用 -->
                 <button id="generateBtn"
-                    class="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-lg text-xl font-bold hover:from-purple-600 hover:to-pink-600 focus:outline-none focus:ring-4 focus:ring-purple-300 transform transition duration-300 ease-in-out hover:scale-105 shadow-lg"
+                    class="w-full bg-gradient-to-r from-purple-600 to-pink-500 text-white py-4 rounded-xl text-2xl font-bold hover:from-purple-700 hover:to-pink-600 focus:outline-none focus:ring-6 focus:ring-purple-400 transform transition duration-300 ease-in-out hover:scale-105 shadow-lg active:scale-95"
                     disabled>生成图片 (加载中...)</button>
 
-                <div id="loadingIndicator" class="hidden text-center text-purple-600 font-semibold mt-4">
+                <div id="loadingIndicator"
+                    class="hidden text-center text-purple-600 font-semibold text-lg mt-4 animate-pulse">
                     正在生成图片，请稍候...
                 </div>
             </div>
 
             <!-- 图片预览区 -->
             <div
-                class="bg-gray-50 p-6 rounded-lg shadow-inner flex items-center justify-center min-h-[300px] border border-gray-200 relative">
-                <img id="outputImage" class="max-w-full h-auto rounded-lg shadow-md" alt="生成的图片"
-                    style="max-height: 400px; display: none;">
+                class="bg-gray-100 p-8 rounded-2xl shadow-inner flex items-center justify-center min-h-[400px] border border-gray-200 relative overflow-hidden">
+                <img id="outputImage" class="max-w-full h-auto rounded-lg shadow-xl" alt="生成的图片"
+                    style="max-height: 500px; display: none;">
                 <canvas id="outputCanvas" class="border border-gray-300 rounded-lg shadow-md"></canvas>
-                <p id="placeholderText" class="text-gray-500 text-center">点击“生成图片”按钮查看效果</p>
+                <p id="placeholderText" class="text-gray-500 text-center text-xl font-medium">输入文字并调整设置以生成图片</p>
             </div>
         </div>
 
-        <!-- 按钮区 -->
-        <div class="mt-8 flex justify-center space-x-4">
+        <!-- 底部操作按钮 -->
+        <div class="mt-10 flex justify-center space-x-6">
             <a id="downloadBtn" download="handwritten_text.png"
-                class="hidden bg-green-500 text-white py-3 px-6 rounded-lg text-lg font-semibold hover:bg-green-600 focus:outline-none focus:ring-4 focus:ring-green-300 transform transition duration-300 ease-in-out hover:scale-105 shadow-md">下载图片</a>
+                class="hidden bg-gradient-to-r from-green-500 to-teal-500 text-white py-3 px-8 rounded-xl text-lg font-semibold hover:from-green-600 hover:to-teal-600 focus:outline-none focus:ring-6 focus:ring-green-300 transform transition duration-300 ease-in-out hover:scale-105 shadow-lg active:scale-95">下载图片</a>
             <button id="copyBtn"
-                class="hidden bg-blue-500 text-white py-3 px-6 rounded-lg text-lg font-semibold hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-300 transform transition duration-300 ease-in-out hover:scale-105 shadow-md">复制图片链接</button>
+                class="hidden bg-gradient-to-r from-blue-500 to-cyan-500 text-white py-3 px-8 rounded-xl text-lg font-semibold hover:from-blue-600 hover:to-cyan-600 focus:outline-none focus:ring-6 focus:ring-blue-300 transform transition duration-300 ease-in-out hover:scale-105 shadow-lg active:scale-95">复制图片链接</button>
             <div id="messageBox"
-                class="fixed bottom-8 right-8 bg-black bg-opacity-75 text-white py-3 px-6 rounded-lg shadow-lg hidden">
+                class="fixed bottom-8 right-8 bg-black bg-opacity-80 text-white py-3 px-6 rounded-lg shadow-xl text-sm hidden z-50">
             </div>
         </div>
 
@@ -173,12 +266,19 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Get all necessary DOM elements
             const inputText = document.getElementById('inputText');
             const fontSelect = document.getElementById('fontSelect');
             const backgroundSelect = document.getElementById('backgroundSelect');
+            const customBgUploadContainer = document.getElementById('customBgUploadContainer'); // New
+            const customBgUpload = document.getElementById('customBgUpload'); // New
             const textColorInput = document.getElementById('textColor');
             const fontSizeInput = document.getElementById('fontSize');
             const fontSizeValueSpan = document.getElementById('fontSizeValue');
+            const charSpacingInput = document.getElementById('charSpacing'); // New
+            const charSpacingValueSpan = document.getElementById('charSpacingValue'); // New
+            const lineSpacingFactorInput = document.getElementById('lineSpacingFactor'); // New
+            const lineSpacingFactorValueSpan = document.getElementById('lineSpacingFactorValue'); // New
             const textAlignmentSelect = document.getElementById('textAlignment');
             const topOffsetInput = document.getElementById('topOffset');
             const topOffsetValueSpan = document.getElementById('topOffsetValue');
@@ -205,6 +305,7 @@
             const BASE_PADDING = 60; // Base padding from canvas edges
 
             let debounceTimer; // For debouncing text input
+            let uploadedBgImage = null; // Store the uploaded image object
 
             // Function to debounce calls
             const debounce = (func, delay) => {
@@ -223,20 +324,43 @@
                 generateBtn.disabled = false;
                 generateBtn.textContent = '生成图片';
                 // Trigger initial image generation once fonts are loaded
-                generateImage();
+                generateImage(); // Initial render
 
                 // Attach event listeners for real-time updates
                 inputText.addEventListener('input', debounce(generateImage, 500)); // Debounce text input
                 fontSelect.addEventListener('change', generateImage);
-                backgroundSelect.addEventListener('change', generateImage);
+                backgroundSelect.addEventListener('change', () => {
+                    // Show/hide custom upload container based on selection
+                    if (backgroundSelect.value === 'custom') {
+                        customBgUploadContainer.classList.remove('hidden');
+                    } else {
+                        customBgUploadContainer.classList.add('hidden');
+                        uploadedBgImage = null; // Clear uploaded image if switching away
+                    }
+                    generateImage();
+                });
+                customBgUpload.addEventListener('change', handleImageUpload); // Handle image upload
                 textColorInput.addEventListener('input', generateImage);
                 fontSizeInput.addEventListener('input', generateImage);
+                charSpacingInput.addEventListener('input', generateImage); // New listener
+                lineSpacingFactorInput.addEventListener('input', generateImage); // New listener
                 textAlignmentSelect.addEventListener('change', generateImage);
                 topOffsetInput.addEventListener('input', generateImage);
                 randomnessIntensityInput.addEventListener('input', generateImage);
                 lineSkewAngleInput.addEventListener('input', generateImage);
-                verticalWritingCheckbox.addEventListener('change', generateImage);
-                verticalDirectionSelect.addEventListener('change', generateImage); // New event listener for vertical direction
+                verticalWritingCheckbox.addEventListener('change', () => {
+                    // Toggle vertical writing options visibility and enable/disable horizontal alignment
+                    if (verticalWritingCheckbox.checked) {
+                        verticalDirectionOptions.style.display = 'block';
+                        textAlignmentSelect.disabled = true;
+                        textAlignmentSelect.value = 'left'; // Reset to left if user unchecks later
+                    } else {
+                        verticalDirectionOptions.style.display = 'none';
+                        textAlignmentSelect.disabled = false;
+                    }
+                    generateImage(); // Trigger update immediately on checkbox change
+                });
+                verticalDirectionSelect.addEventListener('change', generateImage);
 
             }).catch(error => {
                 console.error("字体加载失败:", error);
@@ -244,36 +368,56 @@
                 generateBtn.textContent = '字体加载失败';
             });
 
-            // Update font size display
+            // Handle custom background image upload
+            function handleImageUpload(event) {
+                const file = event.target.files[0];
+                if (!file) {
+                    uploadedBgImage = null; // Clear if no file selected
+                    generateImage(); // Regenerate with current background
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        uploadedBgImage = img; // Store the loaded image
+                        generateImage(); // Regenerate with new custom background
+                    };
+                    img.onerror = () => {
+                        showMessage('图片加载失败，请尝试其他图片。');
+                        uploadedBgImage = null;
+                        generateImage(); // Fallback
+                    };
+                    img.src = e.target.result;
+                };
+                reader.onerror = () => {
+                    showMessage('文件读取失败，请重试。');
+                    uploadedBgImage = null;
+                    generateImage(); // Fallback
+                };
+                reader.readAsDataURL(file);
+            }
+
+
+            // Update slider value displays
             fontSizeInput.addEventListener('input', () => {
                 fontSizeValueSpan.textContent = `${fontSizeInput.value}px`;
             });
-
-            // Update top offset display (percentage)
+            charSpacingInput.addEventListener('input', () => {
+                charSpacingValueSpan.textContent = `${charSpacingInput.value}px`;
+            });
+            lineSpacingFactorInput.addEventListener('input', () => {
+                lineSpacingFactorValueSpan.textContent = `${lineSpacingFactorInput.value}%`;
+            });
             topOffsetInput.addEventListener('input', () => {
                 topOffsetValueSpan.textContent = `${topOffsetInput.value}%`;
             });
-
-            // Update randomness intensity display
             randomnessIntensityInput.addEventListener('input', () => {
                 randomnessIntensityValueSpan.textContent = randomnessIntensityInput.value;
             });
-
-            // Update line skew angle display
             lineSkewAngleInput.addEventListener('input', () => {
                 lineSkewAngleValueSpan.textContent = `${lineSkewAngleInput.value}°`;
-            });
-
-            // Toggle vertical writing options visibility and enable/disable horizontal alignment
-            verticalWritingCheckbox.addEventListener('change', () => {
-                if (verticalWritingCheckbox.checked) {
-                    verticalDirectionOptions.style.display = 'block';
-                    textAlignmentSelect.disabled = true; // Disable horizontal alignment
-                    textAlignmentSelect.value = 'left'; // Reset to left if user unchecks later
-                } else {
-                    verticalDirectionOptions.style.display = 'none';
-                    textAlignmentSelect.disabled = false; // Enable horizontal alignment
-                }
             });
 
             // Show message box temporarily
@@ -286,7 +430,7 @@
             }
 
             // Function to draw handwritten text on canvas
-            function drawHandwrittenText(context, text, font, textColor, fontSize, startX, startY, maxWidth, lineHeight, alignment, randomnessIntensity, lineSkewAngle, isVertical, verticalDirection) {
+            function drawHandwrittenText(context, text, font, textColor, fontSize, startX, startY, maxWidth, lineHeight, alignment, randomnessIntensity, lineSkewAngle, isVertical, verticalDirection, charSpacing, lineSpacingFactor) {
                 context.fillStyle = textColor;
                 context.font = `${fontSize}px "${font}"`;
                 context.textBaseline = 'top';
@@ -296,8 +440,10 @@
                 if (isVertical) {
                     // Vertical writing mode: characters stack, columns move left-to-right or right-to-left
                     let currentColumnX;
-                    const baseColumnAdvance = fontSize * 1.5;
-                    const charVerticalSpacing = fontSize * 1.2;
+                    const effectiveLineHeight = fontSize * (lineSpacingFactor / 100); // Effective line height
+                    const baseColumnAdvance = effectiveLineHeight + charSpacing; // Column advance now depends on line spacing
+                    const charVerticalSpacing = effectiveLineHeight;
+
 
                     // Initialize starting X for columns based on vertical direction
                     if (verticalDirection === 'rtl') {
@@ -387,6 +533,7 @@
                 } else {
                     // Horizontal writing mode
                     let currentY = startY;
+                    const effectiveLineHeight = fontSize * (lineSpacingFactor / 100);
 
                     for (let i = 0; i < textLines.length; i++) {
                         const line = textLines[i];
@@ -406,6 +553,9 @@
                         for (let k = 0; k < line.length; k++) {
                             estimatedLineWidth += context.measureText(line[k]).width;
                         }
+                        // Add character spacing to the estimated width
+                        estimatedLineWidth += (line.length - 1) * charSpacing;
+
 
                         if (alignment === 'center') {
                             translationX = (CANVAS_WIDTH / 2) - (estimatedLineWidth / 2);
@@ -437,12 +587,12 @@
                             const charYJitter = (Math.random() - 0.5) * randomnessIntensity;
 
                             context.fillText(char, charDrawX + charXJitter, charYJitter);
-                            charDrawX += charWidth; // Advance X for next character
+                            charDrawX += charWidth + charSpacing; // Advance X for next character, including char spacing
                         }
 
                         context.restore(); // Restore to previous canvas state
 
-                        currentY += lineHeight + (Math.random() * randomnessIntensity * 0.5); // Advance Y for next line, add random line spacing
+                        currentY += effectiveLineHeight + (Math.random() * randomnessIntensity * 0.5); // Advance Y for next line, add random line spacing
 
                         // Check if text has gone too far down the page
                         if (currentY + fontSize > (CANVAS_HEIGHT - BASE_PADDING)) {
@@ -457,9 +607,6 @@
             // Generate Image function
             async function generateImage() {
                 const text = inputText.value; // Get raw text, don't trim to preserve spaces
-                // No need to check text.trim() here as it's for initial display.
-                // If text is truly empty, placeholder will be shown.
-
                 loadingIndicator.classList.remove('hidden');
                 placeholderText.classList.add('hidden'); // Hide placeholder when generating
                 outputImage.style.display = 'none'; // Hide old image
@@ -468,6 +615,9 @@
                 const selectedBackground = backgroundSelect.value;
                 const selectedTextColor = textColorInput.value;
                 const fontSize = parseInt(fontSizeInput.value);
+                const charSpacing = parseInt(charSpacingInput.value); // New
+                const lineSpacingFactor = parseInt(lineSpacingFactorInput.value); // New
+
                 const textAlignment = textAlignmentSelect.value;
                 const topOffsetPercentage = parseInt(topOffsetInput.value);
                 const topOffsetPixels = (topOffsetPercentage / 100) * CANVAS_HEIGHT;
@@ -488,7 +638,8 @@
 
                         ctx.strokeStyle = '#ADD8E6';
                         ctx.lineWidth = 1;
-                        const notebookLineHeight = fontSize * 1.5;
+                        // Use effective line height for notebook lines
+                        const notebookLineHeight = fontSize * (lineSpacingFactor / 100);
                         for (let i = BASE_PADDING + topOffsetPixels; i < outputCanvas.height - BASE_PADDING; i += notebookLineHeight) {
                             ctx.beginPath();
                             ctx.moveTo(BASE_PADDING, i);
@@ -505,6 +656,23 @@
                         drawParchmentTexture(ctx, outputCanvas.width, outputCanvas.height);
                     } else if (selectedBackground === 'vintage-paper') {
                         drawVintagePaperTexture(ctx, outputCanvas.width, outputCanvas.height);
+                    } else if (selectedBackground === 'custom') { // Handle custom background
+                        if (uploadedBgImage) {
+                            // Draw image to cover the canvas
+                            const hRatio = CANVAS_WIDTH / uploadedBgImage.width;
+                            const vRatio = CANVAS_HEIGHT / uploadedBgImage.height;
+                            const ratio = Math.max(hRatio, vRatio); // Use max to ensure cover
+                            const sWidth = uploadedBgImage.width * ratio;
+                            const sHeight = uploadedBgImage.height * ratio;
+                            const sx = (CANVAS_WIDTH - sWidth) / 2;
+                            const sy = (CANVAS_HEIGHT - sHeight) / 2;
+                            ctx.drawImage(uploadedBgImage, sx, sy, sWidth, sHeight);
+                        } else {
+                            // If custom selected but no image uploaded, fallback to white and show message
+                            ctx.fillStyle = '#FFFFFF';
+                            ctx.fillRect(0, 0, outputCanvas.width, outputCanvas.height);
+                            showMessage('请上传自定义背景图片！');
+                        }
                     } else { // white
                         ctx.fillStyle = '#FFFFFF';
                         ctx.fillRect(0, 0, outputCanvas.width, outputCanvas.height);
@@ -526,12 +694,14 @@
                             BASE_PADDING,
                             BASE_PADDING + topOffsetPixels,
                             CANVAS_WIDTH - BASE_PADDING * 2,
-                            fontSize * 1.5,
+                            fontSize * 1.5, // Base line height passed, then modified by lineSpacingFactor inside
                             textAlignment,
                             randomnessIntensity,
                             lineSkewAngle,
                             isVerticalWriting,
-                            verticalDirection
+                            verticalDirection,
+                            charSpacing, // New
+                            lineSpacingFactor // New
                         );
 
                         // Convert Canvas content to image
@@ -578,6 +748,8 @@
 
             // Initial display for sliders
             fontSizeValueSpan.textContent = `${fontSizeInput.value}px`;
+            charSpacingValueSpan.textContent = `${charSpacingInput.value}px`; // New initial display
+            lineSpacingFactorValueSpan.textContent = `${lineSpacingFactorInput.value}%`; // New initial display
             topOffsetValueSpan.textContent = `${topOffsetInput.value}%`;
             randomnessIntensityValueSpan.textContent = randomnessIntensityInput.value;
             lineSkewAngleValueSpan.textContent = `${lineSkewAngleInput.value}°`;
