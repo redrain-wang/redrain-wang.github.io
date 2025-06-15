@@ -116,7 +116,7 @@
                     <label for="inputText" class="block text-lg font-semibold text-gray-700 mb-2">输入文字:</label>
                     <textarea id="inputText"
                         class="w-full p-4 border border-gray-300 rounded-xl focus:ring-4 focus:ring-purple-300 focus:border-transparent transition duration-300 ease-in-out text-base h-40 resize-y shadow-sm hover:shadow-md"
-                        placeholder="在这里输入你想要生成手写体的文字...（回车和空格会被保留）"></textarea>
+                        placeholder="在这里输入你想要生成的文字...（回车和空格会被保留）"></textarea>
                 </div>
 
                 <div>
@@ -129,10 +129,22 @@
                         <option value="Ma Shan Zheng">马善政 (Ma Shan Zheng)</option>
                         <option value="Liu Jian Mao Cao">刘江毛草 (Liu Jian Mao Cao)</option>
                         <option value="Long Cang">龙藏体 (Long Cang)</option>
-                        <option value="Noto Sans SC">思源黑体 (Noto Sans SC)</option> <!-- New font option -->
-                        <option value="Noto Serif SC">思源宋体 (Noto Serif SC)</option> <!-- New font option -->
+                        <option value="Noto Sans SC">思源黑体 (Noto Sans SC)</option>
+                        <option value="Noto Serif SC">思源宋体 (Noto Serif SC)</option>
+                        <option value="CustomUploadedFont">自定义上传字体 (Custom Uploaded Font)</option>
                     </select>
                 </div>
+
+                <!-- Custom Font Upload Section -->
+                <div id="customFontUploadContainer" class="hidden space-y-2">
+                    <label for="customFontUploadInput" class="block text-lg font-semibold text-gray-700 mb-2">上传字体文件
+                        (.ttf, .otf, .woff, .woff2):</label>
+                    <input type="file" id="customFontUploadInput" accept=".ttf,.otf,.woff,.woff2"
+                        class="w-full p-3 border border-gray-300 rounded-xl bg-white focus:ring-4 focus:ring-purple-300 focus:border-transparent transition duration-300 ease-in-out text-base shadow-sm hover:shadow-md cursor-pointer">
+                    <span id="fontUploadStatus" class="block text-sm text-gray-600 mt-1">请上传字体文件，如 TTF, OTF, WOFF, WOFF2
+                        格式。</span>
+                </div>
+
 
                 <div>
                     <label for="backgroundSelect" class="block text-lg font-semibold text-gray-700 mb-2">选择背景:</label>
@@ -142,8 +154,47 @@
                         <option value="parchment-texture">羊皮纸纹理</option>
                         <option value="vintage-paper">复古纸张</option>
                         <option value="white">纯白</option>
+                        <option value="solid">纯色</option> <!-- New option -->
+                        <option value="gradient">渐变色</option> <!-- New option -->
                         <option value="custom">自定义图片</option>
                     </select>
+                </div>
+
+                <!-- Solid Color Picker Container -->
+                <div id="solidColorContainer" class="hidden space-y-2">
+                    <label for="solidColorPicker" class="block text-lg font-semibold text-gray-700 mb-2">选择纯色:</label>
+                    <input type="color" id="solidColorPicker" value="#F0F0F0"
+                        class="w-full h-12 border border-gray-300 rounded-xl cursor-pointer focus:ring-4 focus:ring-purple-300 focus:border-transparent transition duration-300 ease-in-out shadow-sm hover:shadow-md">
+                </div>
+
+                <!-- Gradient Color Picker Container -->
+                <div id="gradientColorContainer" class="hidden space-y-2">
+                    <label class="block text-lg font-semibold text-gray-700 mb-2">渐变色设置:</label>
+                    <div class="flex items-center space-x-4">
+                        <div class="flex-1">
+                            <label for="gradientStartColor"
+                                class="block text-sm font-medium text-gray-700 mb-1">起始颜色:</label>
+                            <input type="color" id="gradientStartColor" value="#ADD8E6"
+                                class="w-full h-10 border border-gray-300 rounded-lg cursor-pointer focus:ring-2 focus:ring-purple-400">
+                        </div>
+                        <div class="flex-1">
+                            <label for="gradientEndColor"
+                                class="block text-sm font-medium text-gray-700 mb-1">结束颜色:</label>
+                            <input type="color" id="gradientEndColor" value="#E6B0AD"
+                                class="w-full h-10 border border-gray-300 rounded-lg cursor-pointer focus:ring-2 focus:ring-purple-400">
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <label for="gradientDirection"
+                            class="block text-sm font-medium text-gray-700 mb-1">渐变方向:</label>
+                        <select id="gradientDirection"
+                            class="w-full p-2 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-purple-400">
+                            <option value="topToBottom">上到下</option>
+                            <option value="leftToRight">左到右</option>
+                            <option value="topLeftToBottomRight">左上到右下</option>
+                            <option value="topRightToBottomLeft">右上到左下</option>
+                        </select>
+                    </div>
                 </div>
 
                 <!-- 自定义背景上传 -->
@@ -169,7 +220,7 @@
                     <span id="fontSizeValue" class="block text-sm text-gray-600 mt-2 text-right">40px</span>
                 </div>
 
-                <!-- 新增字间距和行间距 -->
+                <!-- 字间距和行间距 -->
                 <div>
                     <label for="charSpacing" class="block text-lg font-semibold text-gray-700 mb-2">字间距:</label>
                     <input type="range" id="charSpacing" min="-10" max="20" value="0"
@@ -296,6 +347,15 @@
             const backgroundSelect = document.getElementById('backgroundSelect');
             const customBgUploadContainer = document.getElementById('customBgUploadContainer');
             const customBgUpload = document.getElementById('customBgUpload');
+            // New: Background color pickers and gradient options
+            const solidColorContainer = document.getElementById('solidColorContainer');
+            const solidColorPicker = document.getElementById('solidColorPicker');
+            const gradientColorContainer = document.getElementById('gradientColorContainer');
+            const gradientStartColor = document.getElementById('gradientStartColor');
+            const gradientEndColor = document.getElementById('gradientEndColor');
+            const gradientDirection = document.getElementById('gradientDirection');
+
+
             const textColorInput = document.getElementById('textColor');
             const fontSizeInput = document.getElementById('fontSize');
             const fontSizeValueSpan = document.getElementById('fontSizeValue');
@@ -324,13 +384,20 @@
             const mobileSaveTip = document.getElementById('mobileSaveTip');
             const ctx = outputCanvas.getContext('2d');
 
+            // Custom Font DOM elements
+            const customFontUploadContainer = document.getElementById('customFontUploadContainer');
+            const customFontUploadInput = document.getElementById('customFontUploadInput');
+            const fontUploadStatus = document.getElementById('fontUploadStatus');
+
+
             // Fixed Canvas dimensions for 9:16 aspect ratio
             const CANVAS_WIDTH = 720;
             const CANVAS_HEIGHT = 1280;
             const BASE_PADDING = 60; // Base padding from canvas edges
 
             let debounceTimer; // For debouncing text input
-            let uploadedBgImage = null; // Store the uploaded image object
+            let uploadedBgImage = null; // Store the uploaded background image object
+            let customFontLoaded = false; // Track if a custom font has been successfully loaded
 
             // Function to debounce calls
             const debounce = (func, delay) => {
@@ -353,18 +420,49 @@
 
                 // Attach event listeners for real-time updates
                 inputText.addEventListener('input', debounce(generateImage, 500)); // Debounce text input
-                fontSelect.addEventListener('change', generateImage);
-                backgroundSelect.addEventListener('change', () => {
-                    // Show/hide custom upload container based on selection
-                    if (backgroundSelect.value === 'custom') {
-                        customBgUploadContainer.classList.remove('hidden');
+                fontSelect.addEventListener('change', () => {
+                    // Toggle custom font upload container visibility
+                    if (fontSelect.value === 'CustomUploadedFont') {
+                        customFontUploadContainer.classList.remove('hidden');
                     } else {
-                        customBgUploadContainer.classList.add('hidden');
-                        uploadedBgImage = null; // Clear uploaded image if switching away
+                        customFontUploadContainer.classList.add('hidden');
+                        // Reset custom font status if switching away
+                        fontUploadStatus.textContent = '请上传字体文件，如 TTF, OTF, WOFF, WOFF2 格式。';
+                        fontUploadStatus.classList.remove('text-green-600', 'text-red-600', 'text-purple-600');
+                        fontUploadStatus.classList.add('text-gray-600');
                     }
                     generateImage();
                 });
-                customBgUpload.addEventListener('change', handleImageUpload); // Handle image upload
+                customFontUploadInput.addEventListener('change', handleFontUpload); // Handle font upload
+
+                // Background selection change handler
+                backgroundSelect.addEventListener('change', () => {
+                    const selectedBg = backgroundSelect.value;
+                    // Hide all background-specific containers first
+                    customBgUploadContainer.classList.add('hidden');
+                    solidColorContainer.classList.add('hidden');
+                    gradientColorContainer.classList.add('hidden');
+                    uploadedBgImage = null; // Clear custom image if switching away
+
+                    // Show the relevant container based on selection
+                    if (selectedBg === 'custom') {
+                        customBgUploadContainer.classList.remove('hidden');
+                    } else if (selectedBg === 'solid') {
+                        solidColorContainer.classList.remove('hidden');
+                    } else if (selectedBg === 'gradient') {
+                        gradientColorContainer.classList.remove('hidden');
+                    }
+                    generateImage();
+                });
+                customBgUpload.addEventListener('change', handleImageUpload); // Handle background image upload
+
+                // New: Listeners for solid and gradient color pickers/selectors
+                solidColorPicker.addEventListener('input', generateImage);
+                gradientStartColor.addEventListener('input', generateImage);
+                gradientEndColor.addEventListener('input', generateImage);
+                gradientDirection.addEventListener('change', generateImage);
+
+
                 textColorInput.addEventListener('input', generateImage);
                 fontSizeInput.addEventListener('input', generateImage);
                 charSpacingInput.addEventListener('input', generateImage);
@@ -398,6 +496,62 @@
                 generateBtn.textContent = '字体加载失败';
             });
 
+            // Handle custom font upload
+            async function handleFontUpload(event) {
+                const file = event.target.files[0];
+                if (!file) {
+                    fontUploadStatus.textContent = '未选择字体文件。';
+                    fontUploadStatus.classList.remove('hidden', 'text-green-600', 'text-red-600', 'text-purple-600');
+                    fontUploadStatus.classList.add('text-gray-600');
+                    customFontLoaded = false;
+                    generateImage(); // Trigger redraw with current (possibly default) font
+                    return;
+                }
+
+                fontUploadStatus.textContent = '正在加载字体...';
+                fontUploadStatus.classList.remove('hidden', 'text-green-600', 'text-red-600', 'text-gray-600');
+                fontUploadStatus.classList.add('text-purple-600');
+                customFontLoaded = false; // Reset status
+
+                try {
+                    const fontName = 'CustomUploadedFont'; // Fixed name for simplicity
+                    const fontUrl = URL.createObjectURL(file); // Create URL for the font file
+
+                    // Remove any previously loaded custom font with the same name
+                    for (const f of document.fonts.values()) {
+                        if (f.family === fontName) {
+                            document.fonts.delete(f);
+                            break;
+                        }
+                    }
+
+                    const customFontFace = new FontFace(fontName, `url(${fontUrl})`);
+                    await customFontFace.load(); // Load the font
+                    document.fonts.add(customFontFace); // Add to document fonts
+                    URL.revokeObjectURL(fontUrl); // Clean up the object URL
+
+                    fontUploadStatus.textContent = `字体 "${file.name}" 加载成功！`;
+                    fontUploadStatus.classList.remove('text-purple-600', 'text-red-600', 'text-gray-600');
+                    fontUploadStatus.classList.add('text-green-600');
+                    customFontLoaded = true; // Mark as loaded
+
+                    fontSelect.value = fontName; // Select the custom font in the dropdown
+                    generateImage(); // Regenerate image with the new font
+                } catch (error) {
+                    console.error("加载自定义字体失败:", error);
+                    fontUploadStatus.textContent = `加载自定义字体失败: ${error.message || '文件损坏或格式不正确'}`;
+                    fontUploadStatus.classList.remove('text-purple-600', 'text-green-600', 'text-gray-600');
+                    fontUploadStatus.classList.add('text-red-600');
+                    customFontLoaded = false; // Mark as failed
+                    // If custom font failed, ensure we revert to a default working font or alert user to change selection
+                    if (fontSelect.value === 'CustomUploadedFont') {
+                        fontSelect.value = 'LXGW WenKai Lite'; // Fallback to a default font
+                        generateImage();
+                    }
+                }
+            }
+
+
             // Handle custom background image upload
             function handleImageUpload(event) {
                 const file = event.target.files[0];
@@ -411,9 +565,6 @@
                 reader.onload = (e) => {
                     const img = new Image();
                     img.onload = () => {
-                        // Validate image dimensions (optional, but good for custom images)
-                        // For 9:16 aspect ratio (720x1280), we can suggest minimal dimensions.
-                        // Or just let it scale. For now, we'll let it scale and just draw.
                         uploadedBgImage = img; // Store the loaded image
                         generateImage(); // Regenerate with new custom background
                     };
@@ -433,24 +584,30 @@
             }
 
 
-            // Update slider value displays
+            // Update slider value displays and trigger image generation
             fontSizeInput.addEventListener('input', () => {
                 fontSizeValueSpan.textContent = `${fontSizeInput.value}px`;
+                generateImage();
             });
             charSpacingInput.addEventListener('input', () => {
                 charSpacingValueSpan.textContent = `${charSpacingInput.value}px`;
+                generateImage();
             });
             lineSpacingFactorInput.addEventListener('input', () => {
                 lineSpacingFactorValueSpan.textContent = `${lineSpacingFactorInput.value}%`;
+                generateImage();
             });
             topOffsetInput.addEventListener('input', () => {
                 topOffsetValueSpan.textContent = `${topOffsetInput.value}%`;
+                generateImage();
             });
             randomnessIntensityInput.addEventListener('input', () => {
                 randomnessIntensityValueSpan.textContent = randomnessIntensityInput.value;
+                generateImage();
             });
             lineSkewAngleInput.addEventListener('input', () => {
                 lineSkewAngleValueSpan.textContent = `${lineSkewAngleInput.value}°`;
+                generateImage();
             });
 
             // Show message box temporarily
@@ -462,25 +619,30 @@
                 }, 3000); // Hide after 3 seconds
             }
 
-            // Function to draw handwritten text on canvas
-            function drawHandwrittenText(context, text, font, textColor, fontSize, startX, startY, maxWidth, lineHeight, alignment, randomnessIntensity, lineSkewAngle, isVertical, verticalDirection, charSpacing, lineSpacingFactor) {
+            // Function to draw text on canvas
+            function drawHandwrittenText(context, text, font, textColor, fontSize, startX, startY, maxWidth, alignment, randomnessIntensity, lineSkewAngle, isVertical, verticalDirection, charSpacing, lineSpacingFactor) {
+                console.log("drawHandwrittenText: 开始绘制文字...");
+                console.log(`- 字体: ${font}, 大小: ${fontSize}px, 颜色: ${textColor}`);
+                console.log(`- 起始坐标: (${startX}, ${startY}), 最大宽度: ${maxWidth}`);
+                console.log(`- 对齐: ${alignment}, 抖动: ${randomnessIntensity}, 倾斜: ${lineSkewAngle}°`);
+                console.log(`- 垂直模式: ${isVertical}, 方向: ${verticalDirection}, 字间距: ${charSpacing}, 行间距因子: ${lineSpacingFactor}%`);
+
                 context.fillStyle = textColor;
-                context.font = `${fontSize}px "${font}"`;
+                context.font = `${fontSize}px "${font}"`; // Use the selected font family
                 context.textBaseline = 'top';
 
                 const textLines = text.split('\n'); // Preserve user's newlines
 
                 if (isVertical) {
-                    // Vertical writing mode: characters stack, columns move left-to-right or right-to-left
+                    console.log("drawHandwrittenText: 垂直模式");
                     let currentColumnX;
-                    const effectiveCharHeight = fontSize * (lineSpacingFactor / 100); // Using lineSpacingFactor for vertical char spacing
-                    const baseColumnAdvance = fontSize + charSpacing; // Column advance now depends on font size and char spacing
+                    const effectiveCharHeight = fontSize * (lineSpacingFactor / 100);
+                    const baseColumnAdvance = fontSize + charSpacing;
 
-                    // Initialize starting X for columns based on vertical direction
                     if (verticalDirection === 'rtl') {
-                        currentColumnX = CANVAS_WIDTH - BASE_PADDING - fontSize; // Start from right
-                    } else { // ltr
-                        currentColumnX = startX; // Start from left
+                        currentColumnX = CANVAS_WIDTH - BASE_PADDING - fontSize;
+                    } else {
+                        currentColumnX = startX;
                     }
 
                     let currentColumnY = startY;
@@ -488,106 +650,101 @@
                     for (let lineIndex = 0; lineIndex < textLines.length; lineIndex++) {
                         const lineContent = textLines[lineIndex];
 
-                        // For each user-defined line (separated by \n), start a new column in vertical mode
-                        // Except for the very first line if it fits.
-                        // Also, if the current column is full, start a new one.
-                        // If line is empty, just advance to next column/line.
-                        if (lineIndex > 0 || (currentColumnY > startY && lineContent.length > 0)) { // Only advance column if it's not the first line AND not the first char of that line
+                        if (lineIndex > 0 || (currentColumnY > startY && lineContent.length > 0)) {
                             if (verticalDirection === 'rtl') {
                                 currentColumnX -= (baseColumnAdvance + (Math.random() - 0.5) * randomnessIntensity * 1.5);
                             } else {
                                 currentColumnX += (baseColumnAdvance + (Math.random() - 0.5) * randomnessIntensity * 1.5);
                             }
-                            currentColumnY = startY; // Reset Y for new column
+                            currentColumnY = startY;
 
-                            // Check if new column goes out of bounds horizontally
                             if (verticalDirection === 'rtl' && currentColumnX < BASE_PADDING - (fontSize / 2)) {
-                                showMessage('垂直模式文字超出图片左侧边界，请减少内容或调整设置。');
-                                return; // Stop drawing
+                                showMessage(`垂直模式文字超出图片左侧边界，请减少内容或调整设置。当前X: ${currentColumnX.toFixed(2)}`);
+                                console.warn("垂直模式文字超出图片左侧边界，停止绘制。");
+                                return;
                             }
                             if (verticalDirection === 'ltr' && currentColumnX + fontSize > CANVAS_WIDTH - BASE_PADDING + (fontSize / 2)) {
-                                showMessage('垂直模式文字超出图片右侧边界，请减少内容或调整设置。');
-                                return; // Stop drawing
+                                showMessage(`垂直模式文字超出图片右侧边界，请减少内容或调整设置。当前X: ${currentColumnX.toFixed(2)}`);
+                                console.warn("垂直模式文字超出图片右侧边界，停止绘制。");
+                                return;
                             }
                         }
+                        console.log(`- 绘制列 (行 ${lineIndex + 1}): X=${currentColumnX.toFixed(2)}, Y=${currentColumnY.toFixed(2)}`);
 
                         for (let i = 0; i < lineContent.length; i++) {
                             const char = lineContent[i];
 
-                            // If char is a space, simply advance Y. Don't draw it.
                             if (char === ' ') {
                                 currentColumnY += effectiveCharHeight + (Math.random() - 0.5) * randomnessIntensity * 0.5;
+                                console.log(`  跳过空格。下一字符Y: ${currentColumnY.toFixed(2)}`);
                                 continue;
                             }
 
-                            // Apply character jitter (x, y) relative to current position
                             const charXJitter = (Math.random() - 0.5) * randomnessIntensity;
                             const charYJitter = (Math.random() - 0.5) * randomnessIntensity;
 
                             context.save();
                             context.translate(currentColumnX + charXJitter, currentColumnY + charYJitter);
 
-                            // Apply random rotation to each character
                             const randomCharSkewRad = ((Math.random() - 0.5) * lineSkewAngle) * Math.PI / 180;
                             context.rotate(randomCharSkewRad);
 
-                            context.textAlign = 'center'; // Center the character around the current translation point
-                            context.fillText(char, 0, 0); // Draw at (0,0) relative to translated origin
+                            context.textAlign = 'center';
+                            context.fillText(char, 0, 0);
+                            console.log(`  绘制字符: "${char}" @(${currentColumnX.toFixed(2)}, ${currentColumnY.toFixed(2)}), 抖动: (${charXJitter.toFixed(2)}, ${charYJitter.toFixed(2)}), 倾斜: ${randomCharSkewRad.toFixed(2)}rad`);
 
                             context.restore();
 
-                            currentColumnY += effectiveCharHeight + (Math.random() - 0.5) * randomnessIntensity * 0.5; // Advance Y
+                            currentColumnY += effectiveCharHeight + (Math.random() - 0.5) * randomnessIntensity * 0.5;
 
-                            // If current character exceeds column height, move to next column
                             if (currentColumnY + fontSize > CANVAS_HEIGHT - BASE_PADDING) {
-                                currentColumnY = startY; // Reset Y for new column
+                                console.log(`  列已满。当前Y: ${currentColumnY.toFixed(2)}, 画布底部限制: ${CANVAS_HEIGHT - BASE_PADDING}. 切换到下一列。`);
+                                currentColumnY = startY;
                                 if (verticalDirection === 'rtl') {
                                     currentColumnX -= (baseColumnAdvance + (Math.random() - 0.5) * randomnessIntensity * 1.5);
                                 } else {
                                     currentColumnX += (baseColumnAdvance + (Math.random() - 0.5) * randomnessIntensity * 1.5);
                                 }
 
-                                // Check again if new column goes out of bounds horizontally
                                 if (verticalDirection === 'rtl' && currentColumnX < BASE_PADDING - (fontSize / 2)) {
                                     showMessage('垂直模式文字超出图片左侧边界，请减少内容或调整设置。');
-                                    return; // Stop drawing
+                                    console.warn("垂直模式文字超出图片左侧边界，停止绘制。");
+                                    return;
                                 }
                                 if (verticalDirection === 'ltr' && currentColumnX + fontSize > CANVAS_WIDTH - BASE_PADDING + (fontSize / 2)) {
                                     showMessage('垂直模式文字超出图片右侧边界，请减少内容或调整设置。');
-                                    return; // Stop drawing
+                                    console.warn("垂直模式文字超出图片右侧边界，停止绘制。");
+                                    return;
                                 }
                             }
                         }
                     }
 
                 } else {
-                    // Horizontal writing mode
+                    console.log("drawHandwrittenText: 水平模式");
                     let currentY = startY;
                     const effectiveLineHeight = fontSize * (lineSpacingFactor / 100);
 
                     for (let i = 0; i < textLines.length; i++) {
                         const line = textLines[i];
-                        if (line === '') { // Handle empty lines (just advance Y)
+                        if (line === '') {
                             currentY += effectiveLineHeight;
+                            console.log(`- 跳过空行。下一行Y: ${currentY.toFixed(2)}`);
                             continue;
                         }
 
-                        // Apply random Y offset for the entire line
                         const lineYJitter = (Math.random() - 0.5) * randomnessIntensity;
                         let lineActualY = currentY + lineYJitter;
 
-                        // Apply random line skew
                         const randomLineSkewRad = ((Math.random() - 0.5) * lineSkewAngle) * Math.PI / 180;
 
-                        context.save(); // Save the current state of the canvas context
+                        context.save();
 
                         let translationX;
-                        // Calculate the estimated width of the entire line for centering/right-aligning
                         let estimatedLineWidth = 0;
                         for (let k = 0; k < line.length; k++) {
                             estimatedLineWidth += context.measureText(line[k]).width;
                         }
-                        // Add character spacing to the estimated width
                         estimatedLineWidth += (line.length - 1) * charSpacing;
 
 
@@ -595,43 +752,41 @@
                             translationX = (CANVAS_WIDTH / 2) - (estimatedLineWidth / 2);
                         } else if (alignment === 'right') {
                             translationX = CANVAS_WIDTH - BASE_PADDING - estimatedLineWidth;
-                        } else { // default 'left'
+                        } else {
                             translationX = startX;
                         }
 
-                        // Ensure text does not go outside padding if estimatedLineWidth is very large
                         translationX = Math.max(BASE_PADDING, translationX);
                         if (translationX + estimatedLineWidth > CANVAS_WIDTH - BASE_PADDING) {
                             translationX = CANVAS_WIDTH - BASE_PADDING - estimatedLineWidth;
                         }
 
-
                         context.translate(translationX, lineActualY);
-                        context.rotate(randomLineSkewRad); // Apply rotation after translation
+                        context.rotate(randomLineSkewRad);
 
-                        let charDrawX = 0; // X position relative to current translation origin
+                        let charDrawX = 0;
 
-                        // Draw characters in the line
+                        console.log(`- 绘制行: "${line}" @(${translationX.toFixed(2)}, ${lineActualY.toFixed(2)}), 倾斜: ${randomLineSkewRad.toFixed(2)}rad`);
                         for (let j = 0; j < line.length; j++) {
                             const char = line[j];
                             const charWidth = context.measureText(char).width;
 
-                            // Apply character jitter (relative to the current rotated line's local coordinates)
                             const charXJitter = (Math.random() - 0.5) * randomnessIntensity;
                             const charYJitter = (Math.random() - 0.5) * randomnessIntensity;
 
                             context.fillText(char, charDrawX + charXJitter, charYJitter);
-                            charDrawX += charWidth + charSpacing; // Advance X for next character, including char spacing
+                            charDrawX += charWidth + charSpacing;
+                            console.log(`  绘制字符: "${char}" @(${charDrawX.toFixed(2)}, ${charYJitter.toFixed(2)}), 抖动: (${charXJitter.toFixed(2)}, ${charYJitter.toFixed(2)})`);
                         }
 
-                        context.restore(); // Restore to previous canvas state
+                        context.restore();
 
-                        currentY += effectiveLineHeight + (Math.random() - 0.5) * randomnessIntensity * 0.5; // Advance Y for next line, add random line spacing
+                        currentY += effectiveLineHeight + (Math.random() - 0.5) * randomnessIntensity * 0.5;
 
-                        // Check if text has gone too far down the page
                         if (currentY + fontSize > (CANVAS_HEIGHT - BASE_PADDING)) {
-                            showMessage('文字内容过多，可能超出图片范围。');
-                            break; // Stop drawing if out of bounds
+                            showMessage(`文字内容过多，可能超出图片范围。当前Y: ${currentY.toFixed(2)}, 画布底部限制: ${CANVAS_HEIGHT - BASE_PADDING}`);
+                            console.warn("水平模式文字超出图片范围，停止绘制。");
+                            break;
                         }
                     }
                 }
@@ -645,12 +800,15 @@
                 placeholderText.classList.add('hidden'); // Hide placeholder when generating
                 outputImage.style.display = 'none'; // Hide old image
 
+                console.log("generateImage: 开始生成图片...");
+                console.log(`输入文本: "${text}"`);
+
                 const selectedFont = fontSelect.value;
                 const selectedBackground = backgroundSelect.value;
                 const selectedTextColor = textColorInput.value;
                 const fontSize = parseInt(fontSizeInput.value);
-                const charSpacing = parseInt(charSpacingInput.value); // New
-                const lineSpacingFactor = parseInt(lineSpacingFactorInput.value); // New
+                const charSpacing = parseInt(charSpacingInput.value);
+                const lineSpacingFactor = parseInt(lineSpacingFactorInput.value);
 
                 const textAlignment = textAlignmentSelect.value;
                 const topOffsetPercentage = parseInt(topOffsetInput.value);
@@ -663,6 +821,7 @@
 
                 outputCanvas.width = CANVAS_WIDTH;
                 outputCanvas.height = CANVAS_HEIGHT;
+                ctx.clearRect(0, 0, outputCanvas.width, outputCanvas.height); // Explicitly clear canvas
 
                 try {
                     // Draw background
@@ -672,7 +831,6 @@
 
                         ctx.strokeStyle = '#ADD8E6';
                         ctx.lineWidth = 1;
-                        // Use effective line height for notebook lines
                         const notebookLineHeight = fontSize * (lineSpacingFactor / 100);
                         for (let i = BASE_PADDING + topOffsetPixels; i < outputCanvas.height - BASE_PADDING; i += notebookLineHeight) {
                             ctx.beginPath();
@@ -686,38 +844,70 @@
                         ctx.moveTo(BASE_PADDING + 20, 0);
                         ctx.lineTo(BASE_PADDING + 20, outputCanvas.height);
                         ctx.stroke();
+                        console.log("背景: 笔记本");
                     } else if (selectedBackground === 'parchment-texture') {
                         drawParchmentTexture(ctx, outputCanvas.width, outputCanvas.height);
+                        console.log("背景: 羊皮纸纹理");
                     } else if (selectedBackground === 'vintage-paper') {
                         drawVintagePaperTexture(ctx, outputCanvas.width, outputCanvas.height);
-                    } else if (selectedBackground === 'custom') { // Handle custom background
+                        console.log("背景: 复古纸张");
+                    } else if (selectedBackground === 'custom') {
                         if (uploadedBgImage) {
-                            // Draw image to cover the canvas
                             const hRatio = CANVAS_WIDTH / uploadedBgImage.width;
                             const vRatio = CANVAS_HEIGHT / uploadedBgImage.height;
-                            const ratio = Math.max(hRatio, vRatio); // Use max to ensure cover
+                            const ratio = Math.max(hRatio, vRatio);
                             const sWidth = uploadedBgImage.width * ratio;
                             const sHeight = uploadedBgImage.height * ratio;
                             const sx = (CANVAS_WIDTH - sWidth) / 2;
                             const sy = (CANVAS_HEIGHT - sHeight) / 2;
                             ctx.drawImage(uploadedBgImage, sx, sy, sWidth, sHeight);
+                            console.log("背景: 自定义图片");
                         } else {
-                            // If custom selected but no image uploaded, fallback to white and show message
                             ctx.fillStyle = '#FFFFFF';
                             ctx.fillRect(0, 0, outputCanvas.width, outputCanvas.height);
                             showMessage('请上传自定义背景图片！');
+                            console.warn("背景: 自定义图片但未上传，使用白色背景。");
                         }
-                    } else { // white
+                    } else if (selectedBackground === 'solid') { // New: Solid color background
+                        ctx.fillStyle = solidColorPicker.value;
+                        ctx.fillRect(0, 0, outputCanvas.width, outputCanvas.height);
+                        console.log(`背景: 纯色 ${solidColorPicker.value}`);
+                    } else if (selectedBackground === 'gradient') { // New: Gradient color background
+                        const startColor = gradientStartColor.value;
+                        const endColor = gradientEndColor.value;
+                        const direction = gradientDirection.value;
+                        let gradient;
+
+                        if (direction === 'topToBottom') {
+                            gradient = ctx.createLinearGradient(0, 0, 0, CANVAS_HEIGHT);
+                        } else if (direction === 'leftToRight') {
+                            gradient = ctx.createLinearGradient(0, 0, CANVAS_WIDTH, 0);
+                        } else if (direction === 'topLeftToBottomRight') {
+                            gradient = ctx.createLinearGradient(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+                        } else if (direction === 'topRightToBottomLeft') {
+                            gradient = ctx.createLinearGradient(CANVAS_WIDTH, 0, 0, CANVAS_HEIGHT);
+                        }
+
+                        gradient.addColorStop(0, startColor);
+                        gradient.addColorStop(1, endColor);
+                        ctx.fillStyle = gradient;
+                        ctx.fillRect(0, 0, outputCanvas.width, outputCanvas.height);
+                        console.log(`背景: 渐变色 ${startColor} -> ${endColor}, 方向: ${direction}`);
+                    }
+                    else { // Default to white if none selected or unknown value
                         ctx.fillStyle = '#FFFFFF';
                         ctx.fillRect(0, 0, outputCanvas.width, outputCanvas.height);
+                        console.log("背景: 默认纯白（未知或未选）");
                     }
 
-                    // Only draw text if inputText is not empty after trimming
-                    if (text.trim() === '') {
-                        placeholderText.classList.remove('hidden'); // Show placeholder if text is empty
-                        outputImage.style.display = 'none'; // Hide generated image
+                    // Draw text only if there's *any* content, including spaces, for consistency
+                    // The previous text.trim() === '' check was causing issues for text with only spaces.
+                    if (text.length === 0) { // Check raw length for truly empty
+                        placeholderText.classList.remove('hidden');
+                        outputImage.style.display = 'none';
                         downloadBtn.classList.add('hidden');
                         copyBtn.classList.add('hidden');
+                        console.log("文本为空，显示占位符。");
                     } else {
                         drawHandwrittenText(
                             ctx,
@@ -728,14 +918,13 @@
                             BASE_PADDING,
                             BASE_PADDING + topOffsetPixels,
                             CANVAS_WIDTH - BASE_PADDING * 2,
-                            fontSize * 1.5, // Base line height passed, then modified by lineSpacingFactor inside
                             textAlignment,
                             randomnessIntensity,
                             lineSkewAngle,
                             isVerticalWriting,
                             verticalDirection,
-                            charSpacing, // New
-                            lineSpacingFactor // New
+                            charSpacing,
+                            lineSpacingFactor
                         );
 
                         // Convert Canvas content to image
@@ -745,18 +934,19 @@
                         downloadBtn.href = imageDataUrl;
                         downloadBtn.classList.remove('hidden');
                         copyBtn.classList.remove('hidden');
+                        console.log("图片生成成功。");
                     }
 
                 } catch (error) {
                     console.error("生成图片时发生错误:", error);
                     showMessage("生成图片时发生错误，请检查输入或刷新页面。");
-                    // Ensure placeholder is shown if an error occurs during drawing
                     placeholderText.classList.remove('hidden');
                     outputImage.style.display = 'none';
                     downloadBtn.classList.add('hidden');
                     copyBtn.classList.add('hidden');
                 } finally {
                     loadingIndicator.classList.add('hidden');
+                    console.log("生成图片过程结束。");
                 }
             }
 
@@ -782,8 +972,8 @@
 
             // Initial display for sliders
             fontSizeValueSpan.textContent = `${fontSizeInput.value}px`;
-            charSpacingValueSpan.textContent = `${charSpacingInput.value}px`; // New initial display
-            lineSpacingFactorValueSpan.textContent = `${lineSpacingFactorInput.value}%`; // New initial display
+            charSpacingValueSpan.textContent = `${charSpacingInput.value}px`;
+            lineSpacingFactorValueSpan.textContent = `${lineSpacingFactorInput.value}%`;
             topOffsetValueSpan.textContent = `${topOffsetInput.value}%`;
             randomnessIntensityValueSpan.textContent = randomnessIntensityInput.value;
             lineSkewAngleValueSpan.textContent = `${lineSkewAngleInput.value}°`;
